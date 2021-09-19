@@ -24,7 +24,7 @@ you have passed in the ports for all of the sensors and motors.
         :param motor2_port: port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
         """
         super().__init__(left_motor_port, right_motor_port)
-        self.motor1 = motor1_port
+        self.motor1 = LargeMotor(motor1_port)
         self.motor2 = motor2_port
         self.gyro_sensor = GyroSensor(gyro_sensor_port)
         self.back_sensor = ColorSensor(back_sensor_port)
@@ -51,7 +51,7 @@ Provides the PID calculations that are then used in the line followers and gyro 
         integral = (error + info[0]) * ki
         derivative = (info[1] - error) * kd
         correction = proportional + integral + derivative
-        print(correction, error, derivative)
+        #print(correction, error, derivative)
         self.on(SpeedPercent(speed - correction),
                 SpeedPercent(speed + correction))  # Super Function
         return [error + info[0], error]
@@ -158,7 +158,8 @@ reset.
         self.right_motor.position = 0
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         info = [0, 0]
-        while (self.left_motor.position + self.right_motor.position) / 2 < tacho_distance or (self.left_motor.position + self.right_motor.position) / 2 > tacho_distance:
+        while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
+            print(tacho_distance,(self.left_motor.position + self.right_motor.position) / 2 )
             error = self.gyro_sensor.angle - angle
             info = self.pid_base_code(error, speed, kp, ki, kd, info)
         self.stop()

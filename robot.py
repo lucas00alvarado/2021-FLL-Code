@@ -5,8 +5,8 @@ from ev3dev2.wheel import Wheel
 
 class Robot(MoveTank):
     def __init__(self, left_motor_port, right_motor_port, wheel_diameter, wheel_width, left_sensor_port=None,
-                 right_sensor_port=None, back_sensor_port=None, gyro_sensor_port=None, motor1_port=None,
-                 motor2_port=None):
+                 right_sensor_port=None, back_sensor_port=None, gyro_sensor_port=None, motor1=None,
+                 motor2=None):
         """
 A class that contains all of the functions that the ev3 should need to use. It has functionality for line followers,
 gyro sensor programs, driving, and more. Also contains all of the sensor and motor objects so that all of it only needs
@@ -20,12 +20,12 @@ you have passed in the ports for all of the sensors and motors.
         :param right_sensor_port: port for the right color sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4
         :param back_sensor_port: port for the back color sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4
         :param gyro_sensor_port: port for the gyro sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4
-        :param motor1_port: port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
-        :param motor2_port: port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
+        :param motor1: LargeMotor or MediumMotor object for one of the attachment motors.
+        :param motor2: LargeMotor or MediumMotor object for one of the attachment motors.
         """
         super().__init__(left_motor_port, right_motor_port)
-        self.motor1 = LargeMotor(motor1_port)
-        self.motor2 = motor2_port
+        self.motor1 = motor1
+        self.motor2 = motor2
         self.gyro_sensor = GyroSensor(gyro_sensor_port)
         self.back_sensor = ColorSensor(back_sensor_port)
         self.left_sensor = ColorSensor(left_sensor_port)
@@ -96,8 +96,7 @@ line following on the left side of a line
 
     def single_follow_distance(self, color_sensor: ColorSensor, speed, distance, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line with 1 color sensor for a distance. You have to use negative PID values if you are line
-following on the left side of a line
+Allows you to follow a line with 1 color sensor for a distance. You have to use negative PID values if you are line following on the left side of a line
         :param color_sensor: the color sensor object that you would like to follow the line
         :param speed: speed for line following. Use a negative value to go backwards
         :param distance: distance to line follow for in centimeters. Use a negative value to go backwards
@@ -112,7 +111,7 @@ following on the left side of a line
         info = [0, 0]
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         if tacho_distance > 0:
-            while (self.left_motor.position + self.right_motor.position) / 2 < tacho_distance:
+            while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
                 # distance * 360(line above) converts rotations into tachocounts
                 error = color_sensor.reflected_light_intensity - rli
                 info = self.pid_base_code(error, speed, kp, ki, kd, info)
@@ -159,7 +158,8 @@ reset.
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         info = [0, 0]
         while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
-            print(tacho_distance,(self.left_motor.position + self.right_motor.position) / 2 )
+            print(tacho_distance, (self.left_motor.position +
+                  self.right_motor.position) / 2)
             error = self.gyro_sensor.angle - angle
             info = self.pid_base_code(error, speed, kp, ki, kd, info)
         self.stop()

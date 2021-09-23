@@ -24,17 +24,17 @@ you have passed in the ports for all of the sensors and motors.
         :param motor2: LargeMotor or MediumMotor object for one of the attachment motors.
         """
         super().__init__(left_motor_port, right_motor_port)
-        self.motor1 = motor1
-        self.motor2 = motor2
         self.gyro_sensor = GyroSensor(gyro_sensor_port)
         self.back_sensor = ColorSensor(back_sensor_port)
         self.left_sensor = ColorSensor(left_sensor_port)
         self.right_sensor = ColorSensor(right_sensor_port)
         self.left_motor = LargeMotor(left_motor_port)
         self.right_motor = LargeMotor(right_motor_port)
+        self.wheel = Wheel(wheel_diameter, wheel_width)
+        self.motor1 = motor1
+        self.motor2 = motor2
         self.black_value = 10
         self.white_value = 60
-        self.wheel = Wheel(wheel_diameter, wheel_width)
 
     def pid_base_code(self, error, speed, kp, ki, kd, pid_variables):
         """
@@ -74,7 +74,7 @@ line following on the left side of a line
         :param kd: keeps your turning from continuing to swing back and forth
         """
         pid_variables = {"integral": 0, "last_error": 0}
-        while stop_sensor.reflected_light_intensity > 10:
+        while stop_sensor.reflected_light_intensity > self.black_value:
             error = color_sensor.reflected_light_intensity - rli
             pid_variables = self.pid_base_code(
                 error, speed, kp, ki, kd, pid_variables)

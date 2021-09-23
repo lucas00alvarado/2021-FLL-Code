@@ -45,19 +45,19 @@ Provides the PID calculations that are then used in the line followers and gyro 
         :param ki: keeps driving in a straight line by keeping track of overall errors
         :param kd: decreases amount of swinging in the line follower or gyro straight driving program
         :param info: info needed for integral and derivative to function
-        :return: Info with a few tweaks which will then be passed back in though info in the next loop iteration
+        :return: Info with a few tweaks which will then be passed back in through info in the next loop iteration
         """
         proportional = error * kp
         integral = (error + info[0]) * ki
-        derivative = (info[1] - error) * kd
+        derivative = (error - info[1]) * kd
         correction = proportional + integral + derivative
         left_speed = speed - correction
         right_speed = speed + correction
         if abs(left_speed) > 100 or abs(right_speed) > 100:
             left_speed = (left_speed / abs(left_speed)) * 100
             right_speed = (right_speed / abs(right_speed)) * 100
-        self.on(SpeedPercent(speed - correction),
-                SpeedPercent(speed + correction))  # Super Function
+        self.on(SpeedPercent(left_speed),
+                SpeedPercent(right_speed))  # Super Function
         return [error + info[0], error]
 
     def follow_until_black(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):

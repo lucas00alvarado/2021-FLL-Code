@@ -36,7 +36,7 @@ you have passed in the ports for all of the sensors and motors.
         self.white_value = 60
         self.wheel = Wheel(wheel_diameter, wheel_width)
 
-    def pid_base_code(self, error, speed, kp, ki, kd, info):
+    def pid_base_code(self, error, speed, kp, ki, kd, pid_variables):
         """
 Provides the PID calculations that are then used in the line followers and gyro straight driving programs.
         :param error: calculated deviation from desired location
@@ -44,12 +44,12 @@ Provides the PID calculations that are then used in the line followers and gyro 
         :param kp: sharpness of corrections
         :param ki: keeps driving in a straight line by keeping track of overall errors
         :param kd: decreases amount of swinging in the line follower or gyro straight driving program
-        :param info: info needed for integral and derivative to function
-        :return: Info with a few tweaks which will then be passed back in through info in the next loop iteration
+        :param pid_variables: variables needed for integral and derivative to function
+        :return: pid_variables with a few tweaks which will then be passed back in through pid_variables in the next loop iteration
         """
         proportional = error * kp
-        integral = (error + info[0]) * ki
-        derivative = (error - info[1]) * kd
+        integral = (error + pid_variables["integral"]) * ki
+        derivative = (error - pid_variables["last_error"]) * kd
         correction = proportional + integral + derivative
         left_speed = speed - correction
         right_speed = speed + correction
@@ -58,7 +58,7 @@ Provides the PID calculations that are then used in the line followers and gyro 
             right_speed = (right_speed / abs(right_speed)) * 100
         self.on(SpeedPercent(left_speed),
                 SpeedPercent(right_speed))  # Super Function
-        return [error + info[0], error]
+        return {"integral": error + pid_variables[0], "last_error": error}
 
     def follow_until_black(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
         """
@@ -73,10 +73,11 @@ line following on the left side of a line
         :param ki: makes sure that your corrections keep you on a straight line. DON'T USE WITH TURNS
         :param kd: keeps your turning from continuing to swing back and forth
         """
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         while stop_sensor.reflected_light_intensity > 10:
             error = color_sensor.reflected_light_intensity - rli
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
         self.stop()  # Super Function
 
     def follow_until_white(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
@@ -92,10 +93,11 @@ line following on the left side of a line
         :param ki: makes sure that your corrections keep you on a straight line. DON'T USE WITH TURNS
         :param kd: keeps your turning from continuing to swing back and forth
         """
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         while stop_sensor.reflected_light_intensity < self.white_value:
             error = color_sensor.reflected_light_intensity - rli
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
         self.stop()  # Super Function
 
     def single_follow_distance(self, color_sensor: ColorSensor, speed, distance, rli, kp, ki=0, kd=0):
@@ -112,19 +114,21 @@ Allows you to follow a line with 1 color sensor for a distance. You have to use 
         """
         self.left_motor.position = 0
         self.right_motor.position = 0
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         if tacho_distance > 0:
             while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
                 # distance * 360(line above) converts rotations into tachocounts
                 error = color_sensor.reflected_light_intensity - rli
-                info = self.pid_base_code(error, speed, kp, ki, kd, info)
+                pid_variables = self.pid_base_code(
+                    error, speed, kp, ki, kd, pid_variables)
             self.stop()  # Super Function
         else:
             while (self.left_motor.position + self.right_motor.position) / 2 > distance * 360:
                 # distance * 360(line above) converts rotations into tachocounts
                 error = color_sensor.reflected_light_intensity - rli
-                info = self.pid_base_code(error, speed, kp, ki, kd, info)
+                pid_variables = self.pid_base_code(
+                    error, speed, kp, ki, kd, pid_variables)
             self.stop()  # Super Function
 
     def double_follow_distance(self, speed, distance, kp, ki=0, kd=0):
@@ -138,12 +142,13 @@ Allows you to follow a line with 2 color sensors for a distance
         """
         self.left_motor.position = 0
         self.right_motor.position = 0
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         while (self.left_motor.position + self.right_motor.position) / 2 < tacho_distance:
             error = self.right_sensor.reflected_light_intensity - \
                 self.left_sensor.reflected_light_intensity
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
 
     def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=0):
         """
@@ -160,12 +165,13 @@ reset.
         self.left_motor.position = 0
         self.right_motor.position = 0
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
             print(tacho_distance, (self.left_motor.position +
                   self.right_motor.position) / 2)
             error = self.gyro_sensor.angle - angle
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
         self.stop()
 
     def gyro_turn(self, angle, left_speed, right_speed, buffer=2):

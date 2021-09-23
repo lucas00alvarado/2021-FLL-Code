@@ -51,7 +51,11 @@ Provides the PID calculations that are then used in the line followers and gyro 
         integral = (error + info[0]) * ki
         derivative = (info[1] - error) * kd
         correction = proportional + integral + derivative
-        #print(correction, error, derivative)
+        left_speed = speed - correction
+        right_speed = speed + correction
+        if abs(left_speed) > 100 or abs(right_speed) > 100:
+            left_speed = (left_speed / abs(left_speed)) * 100
+            right_speed = (right_speed / abs(right_speed)) * 100
         self.on(SpeedPercent(speed - correction),
                 SpeedPercent(speed + correction))  # Super Function
         return [error + info[0], error]

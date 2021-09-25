@@ -150,18 +150,18 @@ Allows you to follow a line with 2 color sensors for a distance
             pid_variables = self.pid_base_code(
                 error, speed, kp, ki, kd, pid_variables)
 
-    def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=0):
+    def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=None):
         """
 Allows you to drive in a straight line using a gyro sensor. You have to use negative PID values if going backwards.
-You should also reset your gyro sensor with the command robot.gyro_sensor.reset() unless you want to follow a previous
-reset.
         :param speed: speed for driving. Use a negative value to go backwards
         :param distance: distance to drive for in centimeters. Use a negative value to go backwards
         :param kp: sharpness of corrections in your driving
         :param ki: makes sure that your corrections keep you on a straight line
         :param kd: keeps your turning from continuing to swing back and forth
-        :param angle: the gyro sensor angle that you want to follow the line at
+        :param angle: the gyro sensor angle that you want to follow the line at. Auto set to your current angle so it will drive in a straight line
         """
+        if not angle:
+            angle = self.gyro_sensor.angle
         self.left_motor.position = 0
         self.right_motor.position = 0
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
@@ -176,13 +176,13 @@ reset.
 
     def gyro_turn(self, angle, left_speed, right_speed, buffer=2):
         """
-Allows you to turn a specific angle using the gyro sensor. You should reset your gyro sensor with the command
-robot.gyro_sensor.reset() unless you want to turn using a previous reset
-        :param angle: gyro angle to turn to. Use a negative value if turning counter-clockwise
+Allows you to turn a specific angle using the gyro sensor. 
+        :param angle: gyro angle to turn. Use a negative value if turning counter-clockwise
         :param left_speed: the speed that the left wheel should drive at during the turn
         :param right_speed: the speed that the right wheel should drive at during the turn
         :param buffer: the amount of buffer in degrees that it can be on either side of the angle
         """
+        angle += self.gyro_sensor.angle
         while not ((angle + buffer) > self.gyro_sensor.angle > (angle - buffer)):
             self.on(SpeedPercent(left_speed), SpeedPercent(
                 right_speed))  # Super Function

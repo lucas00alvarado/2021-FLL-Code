@@ -58,7 +58,7 @@ Provides the PID calculations that are then used in the line followers and gyro 
             right_speed = (right_speed / abs(right_speed)) * 100
         self.on(SpeedPercent(left_speed),
                 SpeedPercent(right_speed))  # Super Function
-        return {"integral": error + pid_variables[0], "last_error": error}
+        return {"integral": error + pid_variables["integral"], "last_error": error}
 
     def follow_until_black(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
         """

@@ -5,8 +5,8 @@ from ev3dev2.wheel import Wheel
 
 class Robot(MoveTank):
     def __init__(self, left_motor_port, right_motor_port, wheel_diameter, wheel_width, left_sensor_port=None,
-                 right_sensor_port=None, back_sensor_port=None, gyro_sensor_port=None, motor1_port=None,
-                 motor2_port=None):
+                 right_sensor_port=None, back_sensor_port=None, gyro_sensor_port=None, motor1=None,
+                 motor2=None):
         """
 A class that contains all of the functions that the ev3 should need to use. It has functionality for line followers,
 gyro sensor programs, driving, and more. Also contains all of the sensor and motor objects so that all of it only needs
@@ -20,23 +20,23 @@ you have passed in the ports for all of the sensors and motors.
         :param right_sensor_port: port for the right color sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4
         :param back_sensor_port: port for the back color sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4
         :param gyro_sensor_port: port for the gyro sensor. Values: INPUT_1, INPUT_2, INPUT_3, INPUT_4
-        :param motor1_port: port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
-        :param motor2_port: port for one of the attachment motors. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
+        :param motor1: LargeMotor or MediumMotor object for one of the attachment motors.
+        :param motor2: LargeMotor or MediumMotor object for one of the attachment motors.
         """
         super().__init__(left_motor_port, right_motor_port)
-        self.motor1 = LargeMotor(motor1_port)
-        self.motor2 = motor2_port
         self.gyro_sensor = GyroSensor(gyro_sensor_port)
         self.back_sensor = ColorSensor(back_sensor_port)
         self.left_sensor = ColorSensor(left_sensor_port)
         self.right_sensor = ColorSensor(right_sensor_port)
         self.left_motor = LargeMotor(left_motor_port)
         self.right_motor = LargeMotor(right_motor_port)
+        self.wheel = Wheel(wheel_diameter, wheel_width)
+        self.motor1 = motor1
+        self.motor2 = motor2
         self.black_value = 10
         self.white_value = 60
-        self.wheel = Wheel(wheel_diameter, wheel_width)
 
-    def pid_base_code(self, error, speed, kp, ki, kd, info):
+    def pid_base_code(self, error, speed, kp, ki, kd, pid_variables):
         """
 Provides the PID calculations that are then used in the line followers and gyro straight driving programs.
         :param error: calculated deviation from desired location
@@ -44,22 +44,25 @@ Provides the PID calculations that are then used in the line followers and gyro 
         :param kp: sharpness of corrections
         :param ki: keeps driving in a straight line by keeping track of overall errors
         :param kd: decreases amount of swinging in the line follower or gyro straight driving program
-        :param info: info needed for integral and derivative to function
-        :return: Info with a few tweaks which will then be passed back in though info in the next loop iteration
+        :param pid_variables: variables needed for integral and derivative to function
+        :return: pid_variables with a few tweaks which will then be passed back in through pid_variables in the next loop iteration
         """
         proportional = error * kp
-        integral = (error + info[0]) * ki
-        derivative = (info[1] - error) * kd
+        integral = (error + pid_variables["integral"]) * ki
+        derivative = (error - pid_variables["last_error"]) * kd
         correction = proportional + integral + derivative
-        #print(correction, error, derivative)
-        self.on(SpeedPercent(speed - correction),
-                SpeedPercent(speed + correction))  # Super Function
-        return [error + info[0], error]
+        left_speed = speed - correction
+        right_speed = speed + correction
+        if abs(left_speed) > 100 or abs(right_speed) > 100:
+            left_speed = (left_speed / abs(left_speed)) * 100
+            right_speed = (right_speed / abs(right_speed)) * 100
+        self.on(SpeedPercent(left_speed),
+                SpeedPercent(right_speed))  # Super Function
+        return {"integral": error + pid_variables["integral"], "last_error": error}
 
     def follow_until_black(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line until the other color sensor hits black. You have to use negative PID values if you are
-line following on the left side of a line
+Allows you to follow a line until the other color sensor hits black
         :param color_sensor: the color sensor object that you would like to follow the line
         :param stop_sensor: the color sensor object to detect black
         :param speed: speed for line following. Use a negative value to go backwards
@@ -69,16 +72,16 @@ line following on the left side of a line
         :param ki: makes sure that your corrections keep you on a straight line. DON'T USE WITH TURNS
         :param kd: keeps your turning from continuing to swing back and forth
         """
-        info = [0, 0]
-        while stop_sensor.reflected_light_intensity > 10:
+        pid_variables = {"integral": 0, "last_error": 0}
+        while stop_sensor.reflected_light_intensity > self.black_value:
             error = color_sensor.reflected_light_intensity - rli
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
         self.stop()  # Super Function
 
     def follow_until_white(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line until the other color sensor hits white. You have to use negative PID values if you are
-line following on the left side of a line
+Allows you to follow a line until the other color sensor hits white
         :param color_sensor: the color sensor object that you would like to follow the line
         :param stop_sensor: the color sensor object to detect white
         :param speed: speed for line following. Use a negative value to go backwards
@@ -88,16 +91,16 @@ line following on the left side of a line
         :param ki: makes sure that your corrections keep you on a straight line. DON'T USE WITH TURNS
         :param kd: keeps your turning from continuing to swing back and forth
         """
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         while stop_sensor.reflected_light_intensity < self.white_value:
             error = color_sensor.reflected_light_intensity - rli
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
         self.stop()  # Super Function
 
     def single_follow_distance(self, color_sensor: ColorSensor, speed, distance, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line with 1 color sensor for a distance. You have to use negative PID values if you are line
-following on the left side of a line
+Allows you to follow a line with 1 color sensor for a distance
         :param color_sensor: the color sensor object that you would like to follow the line
         :param speed: speed for line following. Use a negative value to go backwards
         :param distance: distance to line follow for in centimeters. Use a negative value to go backwards
@@ -109,19 +112,21 @@ following on the left side of a line
         """
         self.left_motor.position = 0
         self.right_motor.position = 0
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         if tacho_distance > 0:
-            while (self.left_motor.position + self.right_motor.position) / 2 < tacho_distance:
+            while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
                 # distance * 360(line above) converts rotations into tachocounts
                 error = color_sensor.reflected_light_intensity - rli
-                info = self.pid_base_code(error, speed, kp, ki, kd, info)
+                pid_variables = self.pid_base_code(
+                    error, speed, kp, ki, kd, pid_variables)
             self.stop()  # Super Function
         else:
             while (self.left_motor.position + self.right_motor.position) / 2 > distance * 360:
                 # distance * 360(line above) converts rotations into tachocounts
                 error = color_sensor.reflected_light_intensity - rli
-                info = self.pid_base_code(error, speed, kp, ki, kd, info)
+                pid_variables = self.pid_base_code(
+                    error, speed, kp, ki, kd, pid_variables)
             self.stop()  # Super Function
 
     def double_follow_distance(self, speed, distance, kp, ki=0, kd=0):
@@ -135,44 +140,47 @@ Allows you to follow a line with 2 color sensors for a distance
         """
         self.left_motor.position = 0
         self.right_motor.position = 0
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         while (self.left_motor.position + self.right_motor.position) / 2 < tacho_distance:
             error = self.right_sensor.reflected_light_intensity - \
                 self.left_sensor.reflected_light_intensity
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
 
-    def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=0):
+    def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=None):
         """
-Allows you to drive in a straight line using a gyro sensor. You have to use negative PID values if going backwards.
-You should also reset your gyro sensor with the command robot.gyro_sensor.reset() unless you want to follow a previous
-reset.
+Allows you to drive in a straight line using a gyro sensor
         :param speed: speed for driving. Use a negative value to go backwards
         :param distance: distance to drive for in centimeters. Use a negative value to go backwards
         :param kp: sharpness of corrections in your driving
         :param ki: makes sure that your corrections keep you on a straight line
         :param kd: keeps your turning from continuing to swing back and forth
-        :param angle: the gyro sensor angle that you want to follow the line at
+        :param angle: the gyro sensor angle that you want to follow the line at. Auto set to your current angle so it will drive in a straight line
         """
+        if not angle:
+            angle = self.gyro_sensor.angle
         self.left_motor.position = 0
         self.right_motor.position = 0
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
-        info = [0, 0]
+        pid_variables = {"integral": 0, "last_error": 0}
         while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
-            print(tacho_distance,(self.left_motor.position + self.right_motor.position) / 2 )
+            print(tacho_distance, (self.left_motor.position +
+                  self.right_motor.position) / 2)
             error = self.gyro_sensor.angle - angle
-            info = self.pid_base_code(error, speed, kp, ki, kd, info)
+            pid_variables = self.pid_base_code(
+                error, speed, kp, ki, kd, pid_variables)
         self.stop()
 
     def gyro_turn(self, angle, left_speed, right_speed, buffer=2):
         """
-Allows you to turn a specific angle using the gyro sensor. You should reset your gyro sensor with the command
-robot.gyro_sensor.reset() unless you want to turn using a previous reset
-        :param angle: gyro angle to turn to. Use a negative value if turning counter-clockwise
+Allows you to turn a specific angle using the gyro sensor. 
+        :param angle: gyro angle to turn. Use a negative value if turning counter-clockwise
         :param left_speed: the speed that the left wheel should drive at during the turn
         :param right_speed: the speed that the right wheel should drive at during the turn
         :param buffer: the amount of buffer in degrees that it can be on either side of the angle
         """
+        angle += self.gyro_sensor.angle
         while not ((angle + buffer) > self.gyro_sensor.angle > (angle - buffer)):
             self.on(SpeedPercent(left_speed), SpeedPercent(
                 right_speed))  # Super Function

@@ -62,8 +62,7 @@ Provides the PID calculations that are then used in the line followers and gyro 
 
     def follow_until_black(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line until the other color sensor hits black. You have to use negative PID values if you are
-line following on the left side of a line
+Allows you to follow a line until the other color sensor hits black
         :param color_sensor: the color sensor object that you would like to follow the line
         :param stop_sensor: the color sensor object to detect black
         :param speed: speed for line following. Use a negative value to go backwards
@@ -82,8 +81,7 @@ line following on the left side of a line
 
     def follow_until_white(self, color_sensor: ColorSensor, stop_sensor: ColorSensor, speed, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line until the other color sensor hits white. You have to use negative PID values if you are
-line following on the left side of a line
+Allows you to follow a line until the other color sensor hits white
         :param color_sensor: the color sensor object that you would like to follow the line
         :param stop_sensor: the color sensor object to detect white
         :param speed: speed for line following. Use a negative value to go backwards
@@ -102,7 +100,7 @@ line following on the left side of a line
 
     def single_follow_distance(self, color_sensor: ColorSensor, speed, distance, rli, kp, ki=0, kd=0):
         """
-Allows you to follow a line with 1 color sensor for a distance. You have to use negative PID values if you are line following on the left side of a line
+Allows you to follow a line with 1 color sensor for a distance
         :param color_sensor: the color sensor object that you would like to follow the line
         :param speed: speed for line following. Use a negative value to go backwards
         :param distance: distance to line follow for in centimeters. Use a negative value to go backwards
@@ -152,7 +150,7 @@ Allows you to follow a line with 2 color sensors for a distance
 
     def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=None):
         """
-Allows you to drive in a straight line using a gyro sensor. You have to use negative PID values if going backwards.
+Allows you to drive in a straight line using a gyro sensor
         :param speed: speed for driving. Use a negative value to go backwards
         :param distance: distance to drive for in centimeters. Use a negative value to go backwards
         :param kp: sharpness of corrections in your driving

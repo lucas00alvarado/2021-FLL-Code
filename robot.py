@@ -217,3 +217,8 @@ Allows you to have the robot drive and then stop on a certain color
         else:
             while self.left_sensor.color_name != color_name and self.right_sensor.color_name != color_name:
                 self.on(left_speed, right_speed)  # Super Function
+
+    def stop_on_black(self, black_value, speed):
+        while self.left_sensor.reflected_light_intensity > black_value and self.right_sensor.reflected_light_intensity > black_value:
+            self.on(speed, speed)
+        self.stop()

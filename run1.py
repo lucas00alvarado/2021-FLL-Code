@@ -16,9 +16,9 @@ bot.gyro_straight(25, 22, 0.25, angle=bot.gyro_sensor.angle)
 # drives straight 18cm
 bot.gyro_turn(0, 20, -20)
 # turns 90 degrees
-bot.gyro_straight(25, 33, 0.25)
+bot.gyro_straight(25, 33.5, 0.25)
 # drives straight 40cm
 bot.gyro_turn(135, 20, -20)
 # turns 135 degrees
 bot.motor1.on_for_rotations(0, 0.65)
-bot.gyro_straight(55, 30, 0.25, angle=bot.gyro_sensor.angle)
+#moves arm down

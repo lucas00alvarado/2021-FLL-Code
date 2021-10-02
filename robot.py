@@ -186,6 +186,7 @@ Allows you to turn a specific angle using the gyro sensor.
             self.on(SpeedPercent(left_speed), SpeedPercent(
                 right_speed))  # Super Function
         self.stop()
+        self.last_gyro_angle = angle
 
     def square_line(self, speed):
         """

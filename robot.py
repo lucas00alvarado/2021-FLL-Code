@@ -35,6 +35,7 @@ you have passed in the ports for all of the sensors and motors.
         self.motor2 = motor2
         self.black_value = 10
         self.white_value = 60
+        self.last_gyro_angle = 0
 
     def pid_base_code(self, error, speed, kp, ki, kd, pid_variables):
         """
@@ -180,7 +181,7 @@ Allows you to turn a specific angle using the gyro sensor.
         :param right_speed: the speed that the right wheel should drive at during the turn
         :param buffer: the amount of buffer in degrees that it can be on either side of the angle
         """
-        # angle += self.gyro_sensor.angle
+        angle += self.last_gyro_angle
         while not ((angle + buffer) > self.gyro_sensor.angle > (angle - buffer)):
             self.on(SpeedPercent(left_speed), SpeedPercent(
                 right_speed))  # Super Function

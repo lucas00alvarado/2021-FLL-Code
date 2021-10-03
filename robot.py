@@ -34,7 +34,7 @@ you have passed in the ports for all of the sensors and motors.
         self.motor1 = motor1
         self.motor2 = motor2
         self.black_value = 10
-        self.white_value = 60
+        self.white_value = 50
         self.last_gyro_angle = 0
 
     def pid_base_code(self, error, speed, kp, ki, kd, pid_variables):
@@ -75,7 +75,7 @@ Allows you to follow a line until the other color sensor hits black
         """
         pid_variables = {"integral": 0, "last_error": 0}
         while stop_sensor.reflected_light_intensity > self.black_value:
-            error = color_sensor.reflected_light_intensity - rli
+            error = rli - color_sensor.reflected_light_intensity
             pid_variables = self.pid_base_code(
                 error, speed, kp, ki, kd, pid_variables)
         self.stop()  # Super Function
@@ -94,7 +94,7 @@ Allows you to follow a line until the other color sensor hits white
         """
         pid_variables = {"integral": 0, "last_error": 0}
         while stop_sensor.reflected_light_intensity < self.white_value:
-            error = color_sensor.reflected_light_intensity - rli
+            error = rli - color_sensor.reflected_light_intensity
             pid_variables = self.pid_base_code(
                 error, speed, kp, ki, kd, pid_variables)
         self.stop()  # Super Function

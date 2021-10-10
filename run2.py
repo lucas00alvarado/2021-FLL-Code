@@ -10,31 +10,69 @@ bot = Robot(OUTPUT_A, OUTPUT_B, 56, 15, INPUT_1, INPUT_2,
 
 bot.black_value = 7
 bot.white_value = 60
-# bot.gyro_sensor.reset()
-# bot.gyro_turn(43, 40, 10)
-# bot.gyro_straight(40, 12, 0.5)
-# bot.double_follow_distance(30, 63, 0.23, kd=0.04)
-# bot.gyro_straight(-40, -30, 0.5)
-# bot.last_gyro_angle = 90
-# bot.gyro_turn(35, 0, -40, buffer=4)
-# bot.gyro_turn(-35, -40, 0, buffer=4)
-# bot.gyro_straight(50, 91, 0.5)
-# bot.gyro_straight(-50, -20, 0.5)
-# bot.stop_on_black(7, 20)
-# bot.gyro_straight(40, 5, 0.25)
-# bot.stop_on_black(7, 20)
-# bot.gyro_turn(-20, 7, 30)
+bot.gyro_sensor.reset()
+# reset gyro sensor
+bot.gyro_turn(43, 40, 10)
+# turn to angle of the line that will be followed later
+bot.gyro_straight(40, 12, 0.5)
+# drive to get to the line
+bot.double_follow_distance(30, 63, 0.23, kd=0.04)
+# follow the line while pushing the trucks
+bot.gyro_straight(-40, -30, 0.5)
+# back up before jogging the wheels to move further over for the bridge
+bot.last_gyro_angle = 90
+# sets the bots current angle so that the next turn will be from 90 degrees
+bot.gyro_turn(35, 0, -40, buffer=4)
+# first part of jog
+bot.gyro_turn(-35, -40, 0, buffer=4)
+# second part of jog
+bot.gyro_straight(50, 91, 0.5)
+# drive to knockover half of the bridge
+bot.gyro_straight(-50, -20, 0.5)
+# back up to knock over the other half of the bridge
+bot.stop_on_black(7, 20)
+# stop on the hashmark before the line to line follow
+bot.gyro_straight(40, 5, 0.25)
+# goes past the hash mark to allow a stop on black to the line to follow
+bot.stop_on_black(7, 20)
+# stop on the line that will be line followed
+bot.gyro_turn(-20, 7, 30)
+# turns to the angle of the line to follow
 bot.motor1.on_for_rotations(10, 0.16)
+# puts the arm up so that it doesn't hit airdrop
 bot.follow_until_white(bot.right_sensor, bot.left_sensor, 30, 40, 0.25)
+# follows the line until right before the airdrop, on the white hash mark
 bot.last_gyro_angle = bot.gyro_sensor.angle
+# makes the next gyro turn work
 bot.gyro_turn(-5, 0, 20)
+# turns to get the right angle for hitting the airdrop
 bot.gyro_straight(40, 8, 0.1)
+# hits the airdrop
 bot.gyro_turn(110, 30, -30)
+# turns to the line to follow for train tracks
 bot.motor1.on_for_rotations(-10, 0.16)
+# brings arm down to be able to push the train
 bot.single_follow_distance(bot.left_sensor, 20, 30, 35, 0.3, kd=0.04)
-# bot.gyro_straight(30, 30, 0.25)
-bot.motor1.on_for_rotations(10, 0.5)
-bot.motor1.on_for_rotations(-10, 0.5)
-bot.gyro_straight(-30, -5, 0.5)
-bot.motor1.on_for_rotations(10, 0.5)
+# follows the line, pushing the train and getting into position for knocking down the tracks
+bot.motor1.on_for_rotations(10, 0.35)
+# lowers the arm to knock down the train tracks
+bot.motor1.on_for_rotations(-10, 0.2)
+# bring arm back up, but not all the way to avoid hitting train with the back
+bot.gyro_straight(-30, -20, 0.5)
+# drives backwards to be ready to lower the front of the arm on to the train
+bot.motor1.on_for_rotations(10, 0.2)
+# lowers arm onto the front of the train
 bot.gyro_straight(30, 35, 0.25)
+# pushes the train the rest of the way
+bot.motor1.on_for_rotations(-10, 0.2)
+# brings the arm back up
+bot.last_gyro_angle = 180
+# sets the next gyro angle to turn from 180 degrees
+bot.gyro_turn(-85, -30, 0)
+# turns to go to the cargo ship
+bot.gyro_straight(-30, -27, 0.5)
+# drives backwards towards the bridge
+bot.gyro_turn(175, -12, -30)
+# turns to be ready to push the cargo ship
+bot.gyro_straight(-30, -15, 0.5)
+# drives backwards to push the cargo ship

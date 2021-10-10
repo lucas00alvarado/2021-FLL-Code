@@ -8,10 +8,7 @@ class Robot(MoveTank):
                  right_sensor_port=None, back_sensor_port=None, gyro_sensor_port=None, motor1=None,
                  motor2=None):
         """
-A class that contains all of the functions that the ev3 should need to use. It has functionality for line followers,
-gyro sensor programs, driving, and more. Also contains all of the sensor and motor objects so that all of it only needs
-to be initialized once when the Robot class is initialized. Some of the methods inside of this class will only work if
-you have passed in the ports for all of the sensors and motors.
+A class that contains all of the functions that the ev3 should need to use. It has functionality for line followers, gyro sensor programs, driving, and more. Also contains all of the sensor and motor objects so that all of it only needs to be initialized once when the Robot class is initialized. Some of the methods inside of this class will only work if you have passed in the ports for all of the sensors and motors.
         :param left_motor_port: port for the left driving motor. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
         :param right_motor_port: port for the right driving motor. Values: OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
         :param wheel_diameter: the diameter of the wheels in millimeters
@@ -149,7 +146,7 @@ Allows you to follow a line with 2 color sensors for a distance
             pid_variables = self.pid_base_code(
                 error, speed, kp, ki, kd, pid_variables)
 
-    def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=None):
+    def gyro_straight(self, speed, distance, kp, ki=0, kd=0, angle=None, use_current_angle=False):
         """
 Allows you to drive in a straight line using a gyro sensor
         :param speed: speed for driving. Use a negative value to go backwards
@@ -157,9 +154,12 @@ Allows you to drive in a straight line using a gyro sensor
         :param kp: sharpness of corrections in your driving
         :param ki: makes sure that your corrections keep you on a straight line
         :param kd: keeps your turning from continuing to swing back and forth
-        :param angle: the gyro sensor angle that you want to follow the line at. Auto set to your current angle so it will drive in a straight line
+        :param angle: the gyro sensor angle that you want to follow the line at. Auto set to the last gyro turn that you made
+        :param use_current_angle: makes robot use current angle instead of the angle of the last gyro_turn
         """
         if not angle:
+            angle = self.last_gyro_angle
+        if use_current_angle:
             angle = self.gyro_sensor.angle
         self.left_motor.position = 0
         self.right_motor.position = 0

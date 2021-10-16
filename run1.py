@@ -34,23 +34,24 @@ bot.gyro_turn(15, 25, 20, buffer=2)
 #turns slightly 
 bot.gyro_straight(40, 32, 0.25)
 #goes straight till box reaches green circle 
-bot.gyro_straight(20,1,0.25)
+bot.gyro_straight(-20,-3,0.25)
+#goes backwards
 bot.motor1.on_for_rotations(15, -0.44)
 #lifts arm a bit
-bot.gyro_turn(-15,20,30)
-bot.gyro_straight(25,3,0.25)
-bot.gyro_turn(15,30,20)
+#bot.gyro_turn(-15,20,30)
+#bot.gyro_straight(25,3,0.25)
+#bot.gyro_turn(15,30,20)
 #gets in arm position 
-bot.gyro_turn(20,-20,-30)
+#bot.gyro_turn(20,-20,-30)
 #small turn backwards 
-bot.motor1.on_for_rotations(10,0.45)
+#bot.motor1.on_for_rotations(10,0.45)
 #time.sleep(1)
-bot.gyro_straight(10,4,0.25)
+#bot.gyro_straight(10,40,0.25)
 #time.sleep(1)
-bot.motor1.on_for_rotations(20,-0.45)
+#bot.motor1.on_for_rotations(20,-0.45)
 #switches engine 
-bot.gyro_turn(-30,-35,20)
+#bot.gyro_turn(-15,-30,25)
 #slight turn
-bot.gyro_straight(-20,-20,0.25)
+#bot.gyro_straight(-20,-20,0.25)
 #goes home
 bot.stop()

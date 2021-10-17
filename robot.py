@@ -168,8 +168,8 @@ Allows you to drive in a straight line using a gyro sensor
         tacho_distance = ((distance * 10) / self.wheel.circumference_mm) * 360
         pid_variables = {"integral": 0, "last_error": 0}
         while abs(self.left_motor.position + self.right_motor.position) / 2 < abs(tacho_distance):
-            print(tacho_distance, (self.left_motor.position +
-                  self.right_motor.position) / 2)
+           # print(tacho_distance, (self.left_motor.position +
+           #       self.right_motor.position) / 2)
             error = self.gyro_sensor.angle - angle
             pid_variables = self.pid_base_code(
                 error, speed, kp, ki, kd, pid_variables)

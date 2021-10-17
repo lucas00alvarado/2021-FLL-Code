@@ -1,6 +1,7 @@
 from ev3dev2.motor import *
 from ev3dev2.sensor.lego import *
 from ev3dev2.wheel import Wheel
+from time import sleep
 
 
 class Robot(MoveTank):
@@ -54,6 +55,7 @@ Provides the PID calculations that are then used in the line followers and gyro 
         if abs(left_speed) > 100 or abs(right_speed) > 100:
             left_speed = (left_speed / abs(left_speed)) * 100
             right_speed = (right_speed / abs(right_speed)) * 100
+        sleep(0.01)
         self.on(SpeedPercent(left_speed),
                 SpeedPercent(right_speed))  # Super Function
         return {"integral": error + pid_variables["integral"], "last_error": error}
@@ -175,18 +177,26 @@ Allows you to drive in a straight line using a gyro sensor
 
     def gyro_turn(self, angle, left_speed, right_speed, buffer=2):
         """
-Allows you to turn a specific angle using the gyro sensor. 
+Allows you to turn a specific angle using the gyro sensor.
         :param angle: gyro angle to turn. Use a negative value if turning counter-clockwise
         :param left_speed: the speed that the left wheel should drive at during the turn
         :param right_speed: the speed that the right wheel should drive at during the turn
         :param buffer: the amount of buffer in degrees that it can be on either side of the angle
         """
-        angle += self.last_gyro_angle
-        while not ((angle + buffer) > self.gyro_sensor.angle > (angle - buffer)):
-            self.on(SpeedPercent(left_speed), SpeedPercent(
-                right_speed))  # Super Function
-        self.stop()
-        self.last_gyro_angle = angle
+        if angle < 0:
+            angle += self.last_gyro_angle
+            while not (angle + buffer) > self.gyro_sensor.angle:
+                self.on(SpeedPercent(left_speed), SpeedPercent(
+                    right_speed))  # Super Function
+            self.stop()
+            self.last_gyro_angle = angle
+        else:
+            angle += self.last_gyro_angle
+            while not (angle - buffer) < self.gyro_sensor.angle:
+                self.on(SpeedPercent(left_speed), SpeedPercent(
+                    right_speed))  # Super Function
+            self.stop()
+            self.last_gyro_angle = angle
 
     def square_line(self, speed):
         """

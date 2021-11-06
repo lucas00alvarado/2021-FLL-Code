@@ -12,8 +12,9 @@ bot = Robot(OUTPUT_A, OUTPUT_B, 56, 15, INPUT_1, INPUT_2,
 # bot.gyro_straight(20, 20, 0.25)
 # bot.motor1.on_for_rotations(50, 1)
 # bot.black_value = 7
-# bot.white_value = 60
-# bot.gyro_sensor.reset()
+bot.white_value = 60
+bot.gyro_sensor.reset()
+sleep(7)
 # # reset gyro sensor
 # bot.motor1.on_for_rotations(40, 0.2)
 # bot.gyro_turn(45, 40, 10)
@@ -107,15 +108,21 @@ bot.gyro_turn(110, 30, -30)
 bot.single_follow_distance(bot.left_sensor, 20, 17, 45, 0.2, kd=0.08)
 bot.motor1.on_for_rotations(-50, 0.15)
 bot.last_gyro_angle = bot.gyro_sensor.angle
-bot.gyro_straight(50, 12, 0.2, kd=0.08)
-bot.gyro_turn(2, 20, 0)
-bot.motor1.on_for_rotations(-25, 0.25, brake=False)
+bot.gyro_straight(50, 15, 0.2, kd=0.08)
+# bot.gyro_turn(2, 20, 0)
+bot.on_for_rotations(10, 0, 0.03)
+bot.motor1.on_for_rotations(-25, 0.35, brake=False)
 sleep(0.25)
 bot.motor1.on_for_rotations(50, 0.15)
-bot.gyro_turn(-2, -20, 0)
-bot.gyro_straight(-20, -11, 0.2, kd=0.08)
-bot.motor1.on_for_rotations(50, 0.25)
-bot.gyro_straight(40, 35.5, 0.2, kd=0.08)
+# bot.gyro_turn(-2, -20, 0)
+bot.gyro_straight(-20, -14, 0.2, kd=0.08)
+bot.motor1.on_for_rotations(50, 0.35)
+bot.gyro_straight(40, 36.5, 0.2, kd=0.08)
 bot.gyro_turn(-67.5, -40, -15)
 bot.gyro_turn(57.5, 0, -40)
-bot.gyro_straight(40, 50, 0.25, 0.0005, 0.08)
+bot.gyro_straight(-40, -20, 0.25, 0.0005, 0.08)
+
+bot.motor1.on_for_rotations(-50, 0.4, brake=False)
+bot.last_gyro_angle = 0
+bot.gyro_straight(20, 30, 0.25)
+bot.motor1.on_for_rotations(20, 1, brake=False)

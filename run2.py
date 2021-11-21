@@ -11,40 +11,44 @@ bot = Robot(OUTPUT_A, OUTPUT_B, 56, 15, INPUT_1, INPUT_2,
 # bot.motor1.on_for_rotations(-50, 0.4, brake=False)
 # bot.gyro_straight(20, 20, 0.25)
 # bot.motor1.on_for_rotations(50, 1)
-# bot.black_value = 7
+bot.black_value = 7
 bot.white_value = 60
 bot.gyro_sensor.reset()
-sleep(7)
-# # reset gyro sensor
-# bot.motor1.on_for_rotations(40, 0.2)
-# bot.gyro_turn(45, 40, 10)
-# # turn to angle of the line that will be followed later
-# bot.gyro_straight(40, 12, 0.5)
-# # drive to get to the line
-# bot.double_follow_distance(30, 64, 0.15, kd=0.08)
-# # follow the line while pushing the trucks
-# bot.last_gyro_angle = 90
-# # sets the bots current angle so that the next turn will be from 90 degrees
-# bot.gyro_straight(-40, -30, 0.5)
-# # back up before jogging the wheels to move further over for the bridge
-# bot.gyro_turn(44, 0, -40, buffer=4)
-# # first part of jog
-# bot.gyro_turn(-44, -40, 0, buffer=4)
-# # second part of jog
-# bot.gyro_straight(50, 91, 0.5)
-# # drive to knockover half of the bridge
+
+# # # reset gyro sensor
+# # bot.motor1.on_for_rotations(40, 0.2)
+bot.gyro_turn(39, 40, 0)
+# bot.gyro_turn(3, 0, -5)
+# turn to angle of the line that will be followed later
+bot.gyro_straight(40, 12, 0.5)
+# drive to get to the line
+bot.double_follow_distance(30, 64, 0.2, kd=0.12)
+# bot.single_follow_distance(bot.right_sensor,35, 64, 30, -0.3, kd=0.08)
+# follow the line while pushing the trucks
+bot.last_gyro_angle = 90
+# sets the bots current angle so that the next turn will be from 90 degrees
+bot.gyro_straight(-40, -10, 0.5)
+# back up before jogging the wheels to move further over for the bridge
+bot.gyro_straight(30, 8, 0.5)
+bot.gyro_turn(44, 0, -40, buffer=4)
+# first part of jog
+bot.gyro_turn(-44, -40, 0, buffer=4)
+# second part of jog
+bot.gyro_straight(50, 72, 0.5)
+# drive to knockover half of the bridge
 # bot.motor1.on_for_rotations(-40, 0.2)
 
-# bot.gyro_straight(-50, -20, 0.5)
-# # back up to knock over the other half of the bridge
-# bot.stop_on_black(7, 20)
-# # stop on the hashmark before the line to line follow
+bot.gyro_straight(-50, -20, 0.5)
+# back up to knock over the other half of the bridge
+bot.stop_on_black(7, 20)
+# stop on the hashmark before the line to line follow
 # bot.gyro_straight(40, 5, 0.25)
 # # goes past the hash mark to allow a stop on black to the line to follow
 # bot.stop_on_black(7, 20)
 # # stop on the line that will be line followed
-# bot.gyro_turn(-20, 7, 30)
-# # turns to the angle of the line to follow
+bot.gyro_turn(-22, 14, 30)
+
+# turns to the angle of the line to follow
 # bot.motor1.on_for_rotations(10, 0.16)
 # # puts the arm up so that it doesn't hit airdrop
 # bot.follow_until_white(bot.right_sensor, bot.left_sensor,
@@ -95,34 +99,44 @@ sleep(7)
 
 
 bot.follow_until_white(bot.right_sensor, bot.left_sensor,
-                       30, 40, 0.2, kd=0.08)
+                       30, 40, 0.1, kd=0.1)
 # follows the line until right before the airdrop, on the white hash mark
-bot.last_gyro_angle = bot.gyro_sensor.angle
+bot.last_gyro_angle = 72
 # makes the next gyro turn work
-bot.gyro_turn(-5, 0, 20)
-# turns to get the right angle for hitting the airdrop
-bot.gyro_straight(40, 8, 0.1)
-# hits the airdrop
-bot.gyro_turn(110, 30, -30)
+bot.gyro_turn(110, 20, -1.25)
 # turns to the line to follow for train tracks
-bot.single_follow_distance(bot.left_sensor, 20, 17, 45, 0.2, kd=0.08)
-bot.motor1.on_for_rotations(-50, 0.15)
-bot.last_gyro_angle = bot.gyro_sensor.angle
+bot.single_follow_distance(bot.left_sensor, 20, 7, 45, 0.2, kd=0.08)
+
+bot.motor1.on_for_rotations(-50, 0.2)
 bot.gyro_straight(50, 15, 0.2, kd=0.08)
 # bot.gyro_turn(2, 20, 0)
-bot.on_for_rotations(10, 0, 0.03)
-bot.motor1.on_for_rotations(-25, 0.35, brake=False)
-sleep(0.25)
+bot.on_for_rotations(-10, 0, 0.04)
+bot.motor1.on_for_rotations(-25, 0.3, brake=False)
+sleep(0.24)
 bot.motor1.on_for_rotations(50, 0.15)
+bot.on_for_rotations(10, 0, 0.04)
 # bot.gyro_turn(-2, -20, 0)
 bot.gyro_straight(-20, -14, 0.2, kd=0.08)
 bot.motor1.on_for_rotations(50, 0.35)
-bot.gyro_straight(40, 36.5, 0.2, kd=0.08)
+bot.last_gyro_angle = 180
+bot.gyro_straight(40, 37, 0.2, kd=0.08)
+
 bot.gyro_turn(-67.5, -40, -15)
-bot.gyro_turn(57.5, 0, -40)
+bot.last_gyro_angle = 122.5
+bot.gyro_turn(57.5, 3.5, -40)
+
 bot.gyro_straight(-40, -20, 0.25, 0.0005, 0.08)
 
-bot.motor1.on_for_rotations(-50, 0.4, brake=False)
-bot.last_gyro_angle = 0
-bot.gyro_straight(20, 30, 0.25)
-bot.motor1.on_for_rotations(20, 1, brake=False)
+bot.motor1.on_for_rotations(-50, 0.18, brake=False)
+#bot.last_gyro_angle = 0
+# bot.motor1.on_for_rotations(20, 1, brake=False)
+bot.gyro_straight(20, 31, 0.8)
+bot.on_for_rotations(10, 10, -0.04 )
+bot.motor1.on_for_rotations(80, 3)
+print(bot.last_gyro_angle)
+bot.gyro_turn(270 - bot.last_gyro_angle, 30, 0)
+bot.stop_on_black(7, 20)
+bot.gyro_turn(22, 20, -20)
+bot.gyro_straight(30, 60, 0.5)
+bot.gyro_turn(270 - bot.last_gyro_angle, 0, 20)
+bot.gyro_straight(-20, -50, 0.5)

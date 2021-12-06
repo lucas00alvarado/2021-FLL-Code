@@ -56,6 +56,7 @@ Provides the PID calculations that are then used in the line followers and gyro 
             left_speed = (left_speed / abs(left_speed)) * 100
             right_speed = (right_speed / abs(right_speed)) * 100
         sleep(0.01)
+        print("angle: ", self.gyro_sensor.angle)
         self.on(SpeedPercent(left_speed),
                 SpeedPercent(right_speed))  # Super Function
         return {"integral": error + pid_variables["integral"], "last_error": error}

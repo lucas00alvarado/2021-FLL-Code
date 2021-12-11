@@ -54,7 +54,7 @@ time.sleep(0.05)
 # print("goes home")
 
 
-bot.gyro_straight(50, 45, 0.25)
+bot.gyro_straight(50, 48.5, 0.25)
 #goes straight out of home
 bot.gyro_turn(42, 25, 0)
 #turns to deliver green block
@@ -66,5 +66,20 @@ bot.motor1.on_for_rotations(25, -0.2)
 #
 bot.gyro_straight(50,7, 0.25)
 #
-bot.gyro_turn(50, 25, 0)
-bot.stop()
+bot.gyro_turn(52, 25, 0)
+bot.motor1.on_for_rotations(10, 0.17)
+bot.gyro_straight(30, 6, 0.25)
+bot.motor1.on_for_rotations(10, -0.2)
+bot.gyro_turn(-5, -25, 0)
+bot.gyro_straight(-30, -38.5, 0.5)
+bot.gyro_turn(-15, 0, 25)
+bot.motor1.on_for_rotations(20, 0.45)
+bot.gyro_straight(-30, -3, 0.5 )
+bot.motor1.on_for_rotations(-20,0.35)
+bot.gyro_turn(45,30,0)
+bot.gyro_turn(-37,0,30)
+bot.gyro_straight(40,8,0.25)
+bot.motor1.on_for_rotations(20,0.35)
+bot.gyro_straight(-40,-7,0.25)
+bot.motor1.on_for_rotations(-40,0.5)
+bot.gyro_straight(-80,-40,0.25)

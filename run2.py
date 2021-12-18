@@ -31,7 +31,7 @@ bot.gyro_turn(47, 0, -40, buffer=4)
 # first part of jog
 bot.gyro_turn(-47, -40, 0, buffer=4)
 # second part of jog
-bot.gyro_straight(50, 77, 0.5)
+bot.gyro_straight(50, 78, 0.5)
 # drive to knockover half of the bridge
 bot.gyro_straight(-50, -25, 0.5)
 # back up to knock over the other half of the bridge
@@ -73,7 +73,7 @@ bot.gyro_turn(-67.5, -40, -15)
 # first part of backwards jog to be ready to pick up the blocks
 bot.last_gyro_angle = 122.5
 # makes it so that it will turn to 180 with the next turn
-bot.gyro_turn(57.5, -7, -40)
+bot.gyro_turn(57.5, -3.5, -40)
 # second part of backwards jog to be ready to pick up the blocks
 bot.gyro_straight(-40, -15, 0.25, 0.0005, 0.08)
 # backs up more to be ready to pick up the blocks

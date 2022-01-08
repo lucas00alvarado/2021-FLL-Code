@@ -8,9 +8,7 @@ from robot import *
 bot = Robot(OUTPUT_A, OUTPUT_B, 56, 15, INPUT_1, INPUT_2,
             gyro_sensor_port=INPUT_3, motor1=LargeMotor(OUTPUT_C))
 
-
 bot.button.wait_for_bump('enter')
-
 ###########################################################################################
 
 bot.black_value = 15
@@ -105,8 +103,8 @@ bot.gyro_straight(80, 33, 0.6)
 bot.motor1.on_for_rotations(0, 0, brake=False)
 
 bot.button.wait_for_bump('enter')
-
 ###########################################################################################
+
 bot.motor1.on_for_rotations(0, 0, brake=True)
 bot.white_value = 95
 bot.gyro_sensor.reset()
@@ -149,3 +147,83 @@ bot.gyro_turn(-21, 0, 20)
 bot.gyro_straight(80, 75, 0.5)
 bot.gyro_turn(-30, -20, 20)
 bot.gyro_straight(80, 70, 0.5)
+
+bot.button.wait_for_bump('enter')
+##########################################################################################
+
+bot.gyro_sensor.reset()
+time.sleep(0.05)
+bot.gyro_straight(50, 48.5, 0.25)
+# goes straight out of home
+bot.gyro_turn(42, 25, 0)
+# turns to deliver green block
+bot.gyro_straight(50, 12, 0.25)
+# delivers block in green circle
+bot.gyro_turn(-32, -25, 0)
+#
+bot.motor1.on_for_rotations(25, -0.2)
+#
+bot.gyro_straight(50, 7, 0.25)
+#
+bot.gyro_turn(52, 25, 0)
+bot.motor1.on_for_rotations(10, 0.17)
+bot.gyro_straight(30, 6, 0.25)
+bot.motor1.on_for_rotations(10, -0.2)
+bot.gyro_turn(-5, -25, 0)
+bot.gyro_straight(-30, -38.5, 0.5)
+bot.gyro_turn(-15, 0, 25)
+bot.motor1.on_for_rotations(20, 0.45)
+bot.gyro_straight(-30, -3, 0.5)
+bot.motor1.on_for_rotations(-20, 0.35)
+bot.gyro_turn(45, 30, 0)
+bot.gyro_turn(-37, 0, 30)
+bot.gyro_straight(40, 8, 0.25)
+bot.motor1.on_for_rotations(20, 0.35)
+bot.gyro_straight(-40, -7, 0.25)
+bot.motor1.on_for_rotations(-40, 0.5)
+bot.gyro_straight(-80, -40, 0.25)
+
+bot.button.wait_for_bump('enter')
+###########################################################################################
+
+bot.gyro_sensor.reset()
+time.sleep(0.05)
+bot.gyro_straight(40, 20, 0.5)
+print("goes straight out of home area")
+bot.gyro_turn(39, 40, 26)
+print("turns toward the plane transportation journey")
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.gyro_straight(40, 14, 0.35)
+print("goes straight until in position to move plane")
+bot.motor1.on_for_rotations(30, 0.46)
+print("moves arm down and latches onto plane")
+bot.gyro_turn(-50, 0, 60)
+print("turns plane out of holder")
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.motor1.on_for_rotations(30, -0.45)
+print("arm lifts of plane")
+bot.gyro_turn(78, -20, -40)
+print("turns robot away and then towards the truck")
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.gyro_straight(50, 42, 0.5)
+print("moves straight towards truck")
+bot.gyro_turn(-49, 0, 20)
+print("turns into correct position for truck")
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.gyro_straight(40, 1, 0.5)
+bot.motor1.on_for_rotations(30, 0.43)
+print("lowers arm onto the truck")
+bot.gyro_turn(-50.02, -3, 100)
+print("turns truck out of holder")
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.motor1.on_for_rotations(-30, 0.5)
+# bot.gyro_straight(-40, -20, 0.5)
+bot.gyro_turn(-90 - bot.last_gyro_angle, -40, 0)
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.gyro_straight(-40, -25, 0.5)
+bot.gyro_turn(90, 40, 0)
+print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+bot.gyro_straight(40, 15, 0.5)
+bot.gyro_turn(-80, 0, 40)
+bot.stop_on_black(7, 40)
+bot.gyro_straight(20, 8, 0.5)

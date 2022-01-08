@@ -1,6 +1,7 @@
 from ev3dev2.motor import *
 from ev3dev2.sensor.lego import *
 from ev3dev2.wheel import Wheel
+from ev3dev2.button import Button
 from time import sleep
 
 
@@ -34,6 +35,7 @@ A class that contains all of the functions that the ev3 should need to use. It h
         self.black_value = 10
         self.white_value = 50
         self.last_gyro_angle = 0
+        self.button = Button()
 
     def pid_base_code(self, error, speed, kp, ki, kd, pid_variables):
         """

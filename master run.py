@@ -8,9 +8,7 @@ from robot import *
 bot = Robot(OUTPUT_A, OUTPUT_B, 56, 15, INPUT_1, INPUT_2,
             gyro_sensor_port=INPUT_3, motor1=LargeMotor(OUTPUT_C), motor2=LargeMotor(OUTPUT_D))
 
-
 bot.button.wait_for_bump('enter')
-
 ###########################################################################################
 
 bot.black_value = 15
@@ -109,11 +107,20 @@ bot.motor1.on_for_rotations(0, 0, brake=False)
 bot.motor2.on_for_rotations(0, 0, brake=False)
 
 bot.button.wait_for_bump('enter')
+<<<<<<< HEAD
+###########################################################################################
+
+bot.motor1.on_for_rotations(0, 0, brake=True)
+=======
 ###############################################################################################################################
 
+<<<<<<< HEAD
 bot.motor1.reset()
 bot.motor2.reset()
 bot.last_gyro_angle = 0
+=======
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
+>>>>>>> f8370d6db6c31d2cb97dcdb0798e3e793478f058
 bot.white_value = 95
 bot.gyro_sensor.reset()
 time.sleep(0.05)
@@ -159,7 +166,11 @@ bot.motor1.on_for_rotations(0, 0, brake=False)
 bot.motor2.on_for_rotations(0, 0, brake=False)
 
 bot.button.wait_for_bump('enter')
+<<<<<<< HEAD
+##########################################################################################
+=======
 ###############################################################################################################################
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
 
 bot.gyro_sensor.reset()
 bot.motor1.reset()
@@ -167,16 +178,28 @@ bot.motor2.reset()
 bot.last_gyro_angle = 0
 time.sleep(0.05)
 bot.gyro_straight(50, 48.5, 0.25)
+<<<<<<< HEAD
+# goes straight out of home
+bot.gyro_turn(42, 25, 0)
+# turns to deliver green block
+bot.gyro_straight(50, 12, 0.25)
+# delivers block in green circle
+=======
 #goes straight out of home
 bot.gyro_turn(42, 25, 0)
 #turns to deliver green block
 bot.gyro_straight(50, 12, 0.25)
 #delivers block in green circle
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
 bot.gyro_turn(-32, -25, 0)
 #
 bot.motor1.on_for_rotations(25, -0.2)
 #
+<<<<<<< HEAD
+bot.gyro_straight(50, 7, 0.25)
+=======
 bot.gyro_straight(50,7, 0.25)
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
 #
 bot.gyro_turn(52, 25, 0)
 bot.motor1.on_for_rotations(10, 0.17)
@@ -186,6 +209,20 @@ bot.gyro_turn(-5, -25, 0)
 bot.gyro_straight(-40, -38.5, 0.5)
 bot.gyro_turn(-17, 0, 25)
 bot.motor1.on_for_rotations(20, 0.45)
+<<<<<<< HEAD
+bot.gyro_straight(-30, -3, 0.5)
+bot.motor1.on_for_rotations(-20, 0.35)
+bot.gyro_turn(45, 30, 0)
+bot.gyro_turn(-37, 0, 30)
+bot.gyro_straight(40, 8, 0.25)
+bot.motor1.on_for_rotations(20, 0.35)
+bot.gyro_straight(-40, -7, 0.25)
+bot.motor1.on_for_rotations(-40, 0.5)
+bot.gyro_straight(-80, -40, 0.25)
+
+bot.button.wait_for_bump('enter')
+###########################################################################################
+=======
 bot.gyro_straight(-30, -3, 0.5 )
 bot.motor1.on_for_rotations(-20,0.35)
 bot.gyro_turn(47,30,0)
@@ -200,6 +237,7 @@ bot.motor2.on_for_rotations(0, 0, brake=False)
 
 bot.button.wait_for_bump('enter')
 ###############################################################################################################################
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
 
 bot.gyro_sensor.reset()
 bot.motor1.reset()
@@ -228,7 +266,11 @@ print("moves straight towards truck")
 bot.gyro_turn(-53, 0, 20)
 print("turns into correct position for truck")
 print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+<<<<<<< HEAD
+bot.gyro_straight(40, 1, 0.5)
+=======
 bot.gyro_straight(40,1,0.5)
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
 bot.motor1.on_for_rotations(30, 0.43)
 print("lowers arm onto the truck")
 bot.gyro_turn(-50.02, -3, 100)
@@ -241,7 +283,18 @@ print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
 bot.gyro_straight(-40, -25, 0.5)
 bot.gyro_turn(90, 40, 0)
 print(bot.last_gyro_angle, '  ', bot.gyro_sensor.angle)
+<<<<<<< HEAD
 bot.gyro_straight(40,17,0.5)
 bot.gyro_turn(-80,0,40)
 bot.stop_on_black(10, 40)
+=======
+<<<<<<< HEAD
+bot.gyro_straight(40, 15, 0.5)
+bot.gyro_turn(-80, 0, 40)
+=======
+bot.gyro_straight(40,15,0.5)
+bot.gyro_turn(-80,0,40)
+>>>>>>> 27846595da9b6a1b07280f138bf96dc6a31ddcb9
+bot.stop_on_black(7, 40)
+>>>>>>> f8370d6db6c31d2cb97dcdb0798e3e793478f058
 bot.gyro_straight(20, 8, 0.5)

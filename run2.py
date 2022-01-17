@@ -6,7 +6,7 @@ from time import sleep
 from robot import *
 
 bot = Robot(OUTPUT_A, OUTPUT_B, 56, 15, INPUT_1, INPUT_2,
-            gyro_sensor_port=INPUT_3, motor1=LargeMotor(OUTPUT_C), motor2=LargeMotor(OUTPUT_D))
+            gyro_sensor_port=INPUT_3, motor1=LargeMotor(OUTPUT_C))
 
 bot.black_value = 15
 # sets the black value
@@ -14,8 +14,12 @@ bot.white_value = 90
 # sets the white value
 bot.gyro_sensor.reset()
 # reset gyro sensor
+<<<<<<< HEAD
 sleep(0.25)
 bot.motor2.on_for_rotations(20,-0.1)
+=======
+sleep(0.05)
+>>>>>>> f8370d6db6c31d2cb97dcdb0798e3e793478f058
 bot.gyro_turn(40, 40, -1)
 # turn to angle of the line that will be followed later
 bot.gyro_straight(40, 12, 0.5)
@@ -94,7 +98,6 @@ bot.motor1.on_for_rotations(-10, 0.2)
 # bot.gyro_turn(-40, 0, 30)
 # bot.gyro_straight(60, 17, 0.5)
 # bot.gyro_turn(38, 20, -20)
-bot.gyro_straight(65, 130, 0.5)
+bot.gyro_straight(65, 160, 0.5)
 bot.motor1.on_for_rotations(10, 0.2)
-bot.gyro_turn(7, 20, 0)
-bot.gyro_straight(80, 63, 0.6)
+bot.gyro_straight(80, 33, 0.6)

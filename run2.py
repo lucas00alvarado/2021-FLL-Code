@@ -14,7 +14,7 @@ bot.white_value = 90
 # sets the white value
 bot.gyro_sensor.reset()
 # reset gyro sensor
-sleep(0.05)
+sleep(0.25)
 bot.motor2.on_for_rotations(20,-0.1)
 bot.gyro_turn(40, 40, -1)
 # turn to angle of the line that will be followed later
@@ -24,9 +24,9 @@ bot.double_follow_distance(30, 67, 0.2, kd=0.3)
 # follow the line while pushing the trucks
 bot.last_gyro_angle = 90
 # sets the bots current angle so that the next gyro moves will be from 90 degrees
-bot.gyro_straight(-40, -10, 0.5)
+bot.gyro_straight(-40, -10, 2)
 # back up to release the trucks
-bot.gyro_straight(30, 10, 0.5)
+bot.gyro_straight(30, 10, 2)
 # goes forward to avoid transportation journey during the jog
 bot.gyro_turn(47, 0, -40, buffer=4)
 # first part of jog
@@ -73,7 +73,7 @@ bot.gyro_straight(40, 36, 0.2, kd=0.08)
 # pushes the train to the end of the tracks
 bot.gyro_turn(-67.5, -40, -15)
 # first part of backwards jog to be ready to pick up the blocks
-bot.last_gyro_angle = 122
+bot.last_gyro_angle = 122.5
 # makes it so that it will turn to 180 with the next turn
 bot.gyro_turn(57.5, -2, -20)
 # second part of backwards jog to be ready to pick up the blocks
@@ -88,7 +88,7 @@ bot.on_for_rotations(10, 10, -0.05)
 bot.motor1.on_for_rotations(80, 0.18)
 # bot.motor1.on_for_rotations(-10, 0.2, brake=False)
 bot.gyro_straight(-30, -10, 0.5)
-bot.gyro_turn(89.9, 20, -20)
+bot.gyro_turn(90, 20, -20)
 bot.motor1.on_for_rotations(-10, 0.2)
 # bot.gyro_straight(60, 100, 2)
 # bot.gyro_turn(-40, 0, 30)

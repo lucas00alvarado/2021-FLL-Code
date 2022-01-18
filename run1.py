@@ -62,7 +62,7 @@ bot.gyro_straight(50, 12, 0.25)
 #delivers block in green circle
 bot.gyro_turn(-32, -25, 0)
 #
-bot.motor1.on_for_rotations(25, -0.2)
+bot.motor1.on_for_rotations(25, -0.2, block=False)
 #
 bot.gyro_straight(50,7, 0.25)
 #
@@ -80,6 +80,6 @@ bot.gyro_turn(47,30,0)
 bot.gyro_turn(-37,0,30)
 bot.gyro_straight(40,8,0.25)
 bot.motor1.on_for_rotations(20,0.35)
-bot.gyro_straight(-40,-7.5,0.25)
+bot.gyro_straight(-40,-7.2,0.25)
 bot.motor1.on_for_rotations(-40,0.5)
 bot.gyro_straight(-80,-40,0.25)

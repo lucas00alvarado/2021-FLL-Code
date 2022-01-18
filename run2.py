@@ -14,12 +14,9 @@ bot.white_value = 90
 # sets the white value
 bot.gyro_sensor.reset()
 # reset gyro sensor
-<<<<<<< HEAD
 sleep(0.25)
 bot.motor2.on_for_rotations(20,-0.1)
-=======
 sleep(0.05)
->>>>>>> f8370d6db6c31d2cb97dcdb0798e3e793478f058
 bot.gyro_turn(40, 40, -1)
 # turn to angle of the line that will be followed later
 bot.gyro_straight(40, 12, 0.5)
